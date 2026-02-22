@@ -44,25 +44,25 @@ dependencies {
 
     // --- YOUR PROJECT STACK ---
 
-    // Retrofit (Network) & GSON (JSON to Java Converter)
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    // RxJava & Retrofit Adapter (To make them work together)
-    implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
-    implementation("io.reactivex.rxjava3:rxjava:3.1.5")
-
-    // Room (Local Database)
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    // Essential for your project: Room support for RxJava 3
-    implementation("androidx.room:room-rxjava3:$roomVersion")
-
-    // Glide (Loading Images from URL)
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+//    // Retrofit (Network) & GSON (JSON to Java Converter)
+//    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+//    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+//
+//    // RxJava & Retrofit Adapter (To make them work together)
+//    implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
+//    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+//    implementation("io.reactivex.rxjava3:rxjava:3.1.5")
+//
+//    // Room (Local Database)
+//    val roomVersion = "2.6.1"
+//    implementation("androidx.room:room-runtime:$roomVersion")
+//    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+//    // Essential for your project: Room support for RxJava 3
+//    implementation("androidx.room:room-rxjava3:$roomVersion")
+//
+//    // Glide (Loading Images from URL)
+//    implementation("com.github.bumptech.glide:glide:4.16.0")
+//    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     // Lottie (For your Splash Screen Animation)
     implementation("com.airbnb.android:lottie:6.3.0")
@@ -72,8 +72,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:$navVersion")
     implementation("androidx.navigation:navigation-ui:$navVersion")
 
-    // Firebase (Authentication)
-    // Note: You will also need the Google Services plugin later
-    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
-    implementation("com.google.firebase:firebase-auth")
+//    // Firebase (Authentication)
+//    // Note: You will also need the Google Services plugin later
+//    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+//    implementation("com.google.firebase:firebase-auth")
 }
