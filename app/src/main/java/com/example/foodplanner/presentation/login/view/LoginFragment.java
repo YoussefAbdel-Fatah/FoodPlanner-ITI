@@ -53,7 +53,11 @@ public class LoginFragment extends Fragment implements LoginView {
 
     @Override
     public void onLoginSuccess() {
-        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+
+        // Navigate to Home and clear the back stack
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_loginFragment_to_homeFragment);
     }
 
     @Override

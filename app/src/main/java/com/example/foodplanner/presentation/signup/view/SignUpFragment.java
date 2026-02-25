@@ -1,66 +1,77 @@
 package com.example.foodplanner.presentation.signup.view;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import com.example.foodplanner.R;
+import com.example.foodplanner.presentation.signup.presenter.SignUpPresenter;
+import com.example.foodplanner.presentation.signup.presenter.SignUpPresenterInterface;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignUpFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SignUpFragment extends Fragment {
+public class SignUpFragment extends Fragment implements SignUpView {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private SignUpPresenterInterface presenter;
+    private EditText etEmail, etPassword, etConfirmPassword;
+    private Button btnSignUp;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ProgressBar progressBar;
 
     public SignUpFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SignUpFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SignUpFragment newInstance(String param1, String param2) {
-        SignUpFragment fragment = new SignUpFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+        super(R.layout.fragment_sign_up);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Initialize Presenter
+        presenter = new SignUpPresenter(this);
+
+        // Initialize UI Components
+        etEmail = view.findViewById(R.id.etEmail);
+        etPassword = view.findViewById(R.id.etPassword);
+        etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
+        btnSignUp = view.findViewById(R.id.btnSignUp);
+        progressBar = view.findViewById(R.id.progressBar);
+
+        btnSignUp.setOnClickListener(v -> {
+            presenter.registerUser(
+                    etEmail.getText().toString(),
+                    etPassword.getText().toString(),
+                    etConfirmPassword.getText().toString()
+            );
+        });
+    }
+
+
+    @Override
+    public void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        btnSignUp.setEnabled(false); // Disable button so they don't click twice
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up, container, false);
+    public void hideLoading() {
+        progressBar.setVisibility(View.GONE);
+        btnSignUp.setEnabled(true);
+    }
+    @Override
+    public void onSignUpSuccess() {
+        Toast.makeText(getContext(), "Account Created!", Toast.LENGTH_SHORT).show();
+
+        // Navigate to Home
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_signUpFragment_to_homeFragment);
+    }
+
+    @Override
+    public void onSignUpError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 }

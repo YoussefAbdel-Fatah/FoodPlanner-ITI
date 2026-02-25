@@ -2,4 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primary_orange">#FF7D26</color>
+    <color name="primary_green">#4CAF50</color>
+    <color name="text_dark">#1F2937</color>
+    <color name="text_grey">#9CA3AF</color>
+    <color name="input_background">#F3F4F6</color>
+    <color name="stroke_color">#E5E7EB</color>
+
+    <color name="chip_green_bg">#E8F5E9</color>
+    <color name="chip_green_text">#2E7D32</color>
+    <color name="chip_red_bg">#FFEBEE</color>
+    <color name="chip_red_text">#C62828</color>
+    <color name="chip_orange_bg">#FFF3E0</color>
+    <color name="chip_orange_text">#EF6C00</color>
+    <color name="light_gray_bg">#F9FAFB</color>
 </resources>

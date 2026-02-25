@@ -1,9 +1,10 @@
-package com.example.foodplanner.presentation.splash.presenter;
+package com.example.foodplanner.presentation.splash.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,8 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.foodplanner.R;
-import com.example.foodplanner.presentation.splash.view.SplashPresenter;
-import com.example.foodplanner.presentation.splash.view.SplashPresenterInterface;
+import com.example.foodplanner.presentation.splash.presenter.SplashPresenter;
+import com.example.foodplanner.presentation.splash.presenter.SplashPresenterInterface;
 
 public class SplashFragment extends Fragment implements SplashView {
     private SplashPresenterInterface presenter;
@@ -33,10 +34,15 @@ public class SplashFragment extends Fragment implements SplashView {
     }
 
     @Override
-    public void navigateToNextScreen() {
-        if (getView() != null) {
-            Navigation.findNavController(getView())
-                    .navigate(R.id.action_splashFragment_to_loginFragment);
-        }
+    public void navigateToHome() {
+        // Use the new ID we just created in the nav_graph
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_splashFragment_to_nav_home);
+    }
+
+    @Override
+    public void navigateToLogin() {
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_splashFragment_to_loginFragment);
     }
 }
