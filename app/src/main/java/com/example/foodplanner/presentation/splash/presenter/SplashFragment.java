@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.presentation.splash.view.SplashPresenter;
@@ -33,6 +34,9 @@ public class SplashFragment extends Fragment implements SplashView {
 
     @Override
     public void navigateToNextScreen() {
-
+        if (getView() != null) {
+            Navigation.findNavController(getView())
+                    .navigate(R.id.action_splashFragment_to_loginFragment);
+        }
     }
 }
