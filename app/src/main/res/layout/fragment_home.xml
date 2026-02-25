@@ -1,215 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.core.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/light_gray_bg"
-        android:paddingBottom="100dp"> <androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray_bg"
+    android:fillViewport="true"> <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:paddingBottom="80dp"> <ImageView
+    android:id="@+id/imgMenu"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:src="@drawable/ic_menu"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:tint="@color/text_dark" />
+
+    <TextView
+        android:id="@+id/tvAppTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Food Planner"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvMealOfDay"
+        style="@style/TextTitle"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meal of the Day"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvAppTitle" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardMealOfDay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tvMealOfDay">
 
-        <ImageView
-            android:id="@+id/imgMenu"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_menu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/text_dark" />
-
-        <TextView
-            android:id="@+id/tvAppTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Food Planner"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_dark"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imgSearch"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/text_dark" />
-
-        <TextView
-            android:id="@+id/tvMealOfDay"
-            style="@style/TextTitle"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Meal of the Day"
-            android:layout_marginTop="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvAppTitle" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardMealOfDay"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp"
-            app:layout_constraintTop_toBottomOf="@id/tvMealOfDay">
+            android:paddingBottom="16dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/imgMeal"
                 android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp">
+                android:text="Featured"
+                android:background="#99000000"
+                android:textColor="@color/white"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/ShapeAppearance.MaterialComponents.SmallComponent"/>
 
-                <ImageView
-                    android:id="@+id/imgMeal"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sample_food_image"
-                    app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                android:id="@+id/tvMealName"
+                style="@style/TextTitle"
+                android:textSize="22sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Loading..."
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imgMeal"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Featured"
-                    android:background="#99000000"
-                    android:textColor="@color/white"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    style="@style/ShapeAppearance.MaterialComponents.SmallComponent"/>
+            <TextView
+                android:id="@+id/tvMealArea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cuisine"
+                android:textColor="@color/primary_green"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintTop_toBottomOf="@id/tvMealName"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-                <TextView
-                    android:id="@+id/tvMealName"
-                    style="@style/TextTitle"
-                    android:textSize="18sp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Spicy Basil Chicken"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/chipTime"
-                    app:layout_constraintTop_toBottomOf="@id/imgMeal"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/chipTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="⏱ 45m"
-                    android:background="@color/input_background"
-                    android:padding="6dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="@id/tvMealName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvMealName"/>
+    <TextView
+        android:id="@+id/tvCategories"
+        style="@style/TextTitle"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Categories"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardMealOfDay"/>
 
-                <TextView
-                    android:id="@+id/tvMealArea"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thai Cuisine"
-                    android:textColor="@color/primary_green"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvMealName"
-                    app:layout_constraintStart_toStartOf="parent"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/tvCategories"
+        tools:listitem="@layout/item_category"/>
 
-                <TextView
-                    android:id="@+id/tvCal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔥 350 kcal"
-                    android:textColor="@color/text_grey"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintTop_toBottomOf="@id/tvMealArea"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <TextView
-                    android:id="@+id/tvServings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="👤 2 servings"
-                    android:textColor="@color/text_grey"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintTop_toTopOf="@id/tvCal"
-                    app:layout_constraintStart_toEndOf="@id/tvCal"/>
-
-                <Button
-                    android:id="@+id/btnViewRecipe"
-                    style="@style/ButtonPrimary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="View Recipe"
-                    android:textSize="12sp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="@id/tvCal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvCal"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <TextView
-            android:id="@+id/tvCategories"
-            style="@style/TextTitle"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categories"
-            android:layout_marginTop="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardMealOfDay"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="See All"
-            android:textColor="@color/primary_green"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tvCategories"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tvCategories"
-            tools:listitem="@layout/item_category"/>
-
-        <TextView
-            android:id="@+id/tvRecommendations"
-            style="@style/TextTitle"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Recommendations"
-            android:layout_marginTop="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recyclerViewCategories"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewRecommendations"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:layout_marginTop="12dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tvRecommendations"
-            tools:listitem="@layout/item_recommendation"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
