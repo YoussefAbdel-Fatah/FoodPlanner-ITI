@@ -16,7 +16,7 @@ import com.example.foodplanner.data.db.MealEntity;
 
 import java.util.List;
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavViewHolder> {
 
     private Context context;
     private List<MealEntity> meals;
@@ -34,19 +34,29 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         this.listener = listener;
     }
 
+    public void setList(List<MealEntity> meals) {
+        this.meals = meals;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
-    public FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_favorite_meal, parent, false);
-        return new FavoriteViewHolder(view);
+    public FavViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_favorite_meal, parent, false);
+        return new FavViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavoriteViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FavViewHolder holder, int position) {
         MealEntity meal = meals.get(position);
         holder.tvName.setText(meal.strMeal);
-        holder.tvArea.setText(meal.strArea != null ? meal.strArea : "");
-        Glide.with(context).load(meal.strMealThumb).into(holder.imgMeal);
+
+        Glide.with(context)
+                .load(meal.strMealThumb)
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(holder.imgMeal);
 
         holder.btnRemove.setOnClickListener(v -> listener.onRemoveClick(meal));
         holder.itemView.setOnClickListener(v -> listener.onItemClick(meal));
@@ -54,24 +64,18 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public int getItemCount() {
-        return meals.size();
+        return meals == null ? 0 : meals.size();
     }
 
-    public void setList(List<MealEntity> newList) {
-        this.meals = newList;
-        notifyDataSetChanged();
-    }
-
-    static class FavoriteViewHolder extends RecyclerView.ViewHolder {
+    class FavViewHolder extends RecyclerView.ViewHolder {
         ImageView imgMeal, btnRemove;
-        TextView tvName, tvArea;
+        TextView tvName;
 
-        public FavoriteViewHolder(@NonNull View itemView) {
+        public FavViewHolder(@NonNull View itemView) {
             super(itemView);
             imgMeal = itemView.findViewById(R.id.imgFavMeal);
             btnRemove = itemView.findViewById(R.id.btnRemoveFav);
             tvName = itemView.findViewById(R.id.tvFavMealName);
-            tvArea = itemView.findViewById(R.id.tvFavMealArea);
         }
     }
 }

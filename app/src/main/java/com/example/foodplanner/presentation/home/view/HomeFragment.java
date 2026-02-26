@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryAdapter.
 
     // UI Elements
     private ImageView imgMeal, btnFavMealOfDay;
-    private TextView tvMealName, tvMealArea;
+    private TextView tvMealName, tvMealArea, tvMealCategory;
     private MaterialCardView cardMealOfDay;
 
     // RecyclerView Elements
@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryAdapter.
         imgMeal = view.findViewById(R.id.imgMeal);
         tvMealName = view.findViewById(R.id.tvMealName);
         tvMealArea = view.findViewById(R.id.tvMealArea);
+        tvMealCategory = view.findViewById(R.id.tvMealCategory);
         cardMealOfDay = view.findViewById(R.id.cardMealOfDay);
         btnFavMealOfDay = view.findViewById(R.id.btnFavMealOfDay);
         recyclerViewCategories = view.findViewById(R.id.recyclerViewCategories);
@@ -113,7 +114,8 @@ public class HomeFragment extends Fragment implements HomeView, CategoryAdapter.
     public void showRandomMeal(Meal meal) {
         this.currentMeal = meal;
         tvMealName.setText(meal.getName());
-        tvMealArea.setText(meal.getArea());
+        tvMealArea.setText(meal.getArea() != null ? meal.getArea() : "");
+        tvMealCategory.setText(meal.getCategory() != null ? meal.getCategory() : "");
         Glide.with(this).load(meal.getImageUrl()).into(imgMeal);
 
         // Check if this meal is already a favorite
@@ -171,7 +173,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryAdapter.
         if (isMealFavorite) {
             btnFavMealOfDay.setColorFilter(getResources().getColor(R.color.chip_red_text, null));
         } else {
-            btnFavMealOfDay.setColorFilter(getResources().getColor(R.color.text_grey, null));
+            btnFavMealOfDay.setColorFilter(getResources().getColor(R.color.white, null));
         }
     }
 

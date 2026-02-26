@@ -42,64 +42,102 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:cardCornerRadius="24dp"
-        app:cardElevation="4dp"
+        app:cardElevation="6dp"
         app:strokeWidth="0dp"
         app:layout_constraintTop_toBottomOf="@id/tvMealOfDay">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp">
+            android:layout_height="wrap_content">
 
+            <!-- Meal image -->
             <ImageView
                 android:id="@+id/imgMeal"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="260dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_background"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Dark gradient overlay on bottom half of image -->
+            <View
+                android:id="@+id/gradientOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:background="@drawable/bg_gradient_bottom"
+                app:layout_constraintBottom_toBottomOf="@id/imgMeal" />
 
+            <!-- Favorite button -->
+            <ImageView
+                android:id="@+id/btnFavMealOfDay"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/bg_instruction_number"
+                android:backgroundTint="#66000000"
+                android:padding="9dp"
+                android:src="@drawable/ic_heart_filled"
+                app:tint="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-
+            <!-- Meal name over gradient -->
             <TextView
                 android:id="@+id/tvMealName"
-                style="@style/TextTitle"
-                android:textSize="22sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Loading..."
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
+                android:shadowColor="#99000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imgMeal"/>
+                app:layout_constraintBottom_toTopOf="@id/tvMealArea" />
 
+            <!-- Area over gradient -->
             <TextView
                 android:id="@+id/tvMealArea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cuisine"
-                android:textColor="@color/primary_green"
+                android:textColor="#CCFFFFFF"
+                android:textSize="14sp"
+                android:drawablePadding="4dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintTop_toBottomOf="@id/tvMealName"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:layout_marginBottom="16dp"
+                android:shadowColor="#99000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/imgMeal" />
 
-            <ImageView
-                android:id="@+id/btnFavMealOfDay"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/bg_instruction_number"
-                android:backgroundTint="@color/white"
-                android:padding="8dp"
-                android:src="@drawable/ic_heart_filled"
-                app:tint="@color/text_grey"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            <!-- Category chip -->
+            <TextView
+                android:id="@+id/tvMealCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_chip_category"
+                android:backgroundTint="#44FFFFFF"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@id/tvMealArea"
+                app:layout_constraintTop_toTopOf="@id/tvMealArea"
+                app:layout_constraintBottom_toBottomOf="@id/tvMealArea" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
