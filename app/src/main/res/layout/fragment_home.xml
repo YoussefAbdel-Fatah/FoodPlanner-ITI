@@ -59,19 +59,8 @@
                 android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Featured"
-                android:background="#99000000"
-                android:textColor="@color/white"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                style="@style/ShapeAppearance.MaterialComponents.SmallComponent"/>
+
+
 
             <TextView
                 android:id="@+id/tvMealName"
@@ -97,6 +86,20 @@
                 android:layout_marginTop="4dp"
                 app:layout_constraintTop_toBottomOf="@id/tvMealName"
                 app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageView
+                android:id="@+id/btnFavMealOfDay"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/bg_instruction_number"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:src="@drawable/ic_heart_filled"
+                app:tint="@color/text_grey"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
