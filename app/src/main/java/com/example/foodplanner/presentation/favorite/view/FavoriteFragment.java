@@ -16,22 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.data.db.AppDatabase;
-import com.example.foodplanner.data.db.MealDAO;
 import com.example.foodplanner.data.db.MealEntity;
+import com.example.foodplanner.presentation.favorite.presenter.FavoritePresenterImp;
+import com.example.foodplanner.presentation.favorite.presenter.FavortiePresenterInterface;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-
-public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavoriteClickListener {
+public class FavoriteFragment extends Fragment
+        implements FavoriteViewInterface, FavoriteAdapter.OnFavoriteClickListener {
 
     private RecyclerView rvFavorites;
     private TextView tvEmpty;
     private FavoriteAdapter adapter;
-    private MealDAO mealDAO;
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private FavortiePresenterInterface presenter;
 
     public FavoriteFragment() {
     }
@@ -46,8 +44,6 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mealDAO = AppDatabase.getInstance(requireContext()).mealDAO();
-
         rvFavorites = view.findViewById(R.id.rvFavorites);
         tvEmpty = view.findViewById(R.id.tvEmptyFavorites);
 
@@ -55,30 +51,44 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         rvFavorites.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rvFavorites.setAdapter(adapter);
 
-        loadFavorites();
+        // Initialize presenter with DAO
+        presenter = new FavoritePresenterImp(this,
+                AppDatabase.getInstance(requireContext()).mealDAO());
+
+        presenter.loadFavorites();
     }
 
-    private void loadFavorites() {
-        disposables.add(
-                mealDAO.getAllMeals()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(meals -> {
-                            adapter.setList(meals);
-                            tvEmpty.setVisibility(meals.isEmpty() ? View.VISIBLE : View.GONE);
-                            rvFavorites.setVisibility(meals.isEmpty() ? View.GONE : View.VISIBLE);
-                        }, error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show()));
+    // ── FavoriteViewInterface ──
+
+    @Override
+    public void showFavorites(List<MealEntity> meals) {
+        adapter.setList(meals);
+        tvEmpty.setVisibility(View.GONE);
+        rvFavorites.setVisibility(View.VISIBLE);
     }
 
     @Override
+    public void showEmpty() {
+        adapter.setList(new ArrayList<>());
+        tvEmpty.setVisibility(View.VISIBLE);
+        rvFavorites.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showRemoveSuccess() {
+        Toast.makeText(getContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    // ── FavoriteAdapter callbacks ──
+
+    @Override
     public void onRemoveClick(MealEntity meal) {
-        disposables.add(
-                mealDAO.deleteMeal(meal)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                () -> Toast.makeText(getContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show(),
-                                error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show()));
+        presenter.removeFavorite(meal);
     }
 
     @Override
@@ -91,7 +101,9 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
 
     @Override
     public void onDestroyView() {
-        disposables.clear();
+        if (presenter instanceof FavoritePresenterImp) {
+            ((FavoritePresenterImp) presenter).onDestroy();
+        }
         super.onDestroyView();
     }
 }

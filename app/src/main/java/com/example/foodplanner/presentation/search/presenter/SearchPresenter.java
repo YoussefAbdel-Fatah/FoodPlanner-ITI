@@ -5,7 +5,7 @@ import com.example.foodplanner.presentation.search.view.SearchViewInterface;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SearchPresenter {
+public class SearchPresenter implements SearchPresenterInterface {
     private SearchViewInterface view;
     private MealClient client;
 
@@ -32,7 +32,6 @@ public class SearchPresenter {
                         error -> {
                             view.hideLoading();
                             view.showError(error.getMessage());
-                        }
-                );
+                        });
     }
 }

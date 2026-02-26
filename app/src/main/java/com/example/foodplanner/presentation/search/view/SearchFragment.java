@@ -22,6 +22,7 @@ import com.example.foodplanner.data.db.MealDAO;
 import com.example.foodplanner.data.db.MealEntity;
 import com.example.foodplanner.model.Meal;
 import com.example.foodplanner.presentation.search.presenter.SearchPresenter;
+import com.example.foodplanner.presentation.search.presenter.SearchPresenterInterface;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +34,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SearchFragment extends Fragment implements SearchViewInterface, SearchAdapter.OnSearchItemClickListener {
 
-    private SearchPresenter presenter;
+    private SearchPresenterInterface presenter;
     private RecyclerView recyclerView;
     private SearchAdapter adapter;
     private EditText etSearch;
