@@ -6,21 +6,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
 import com.example.foodplanner.model.Category;
+
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private Context context;
     private List<Category> categories;
+    private OnCategoryClickListener listener;
 
-    public CategoryAdapter(Context context, List<Category> categories) {
+    public interface OnCategoryClickListener {
+        void onCategoryClick(Category category);
+    }
+
+    public CategoryAdapter(Context context, List<Category> categories, OnCategoryClickListener listener) {
         this.context = context;
         this.categories = categories;
+        this.listener = listener;
     }
 
     public void setList(List<Category> categories) {
@@ -43,16 +52,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         Glide.with(context)
                 .load(current.getImageUrl())
-                .centerCrop() // Keep the image aspect ratio correct
-                .placeholder(R.drawable.ic_launcher_foreground) // Show while loading
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.imgCategory);
 
-        // Optional: Add a click listener if you want to open the category later
-    /*
-    holder.itemView.setOnClickListener(v -> {
-        // Handle click
-    });
-    */
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onCategoryClick(current);
+            }
+        });
     }
 
     @Override

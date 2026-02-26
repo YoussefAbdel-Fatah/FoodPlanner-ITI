@@ -20,13 +20,12 @@ import com.example.foodplanner.R;
 import com.example.foodplanner.model.Category;
 import com.example.foodplanner.model.Meal;
 import com.example.foodplanner.presentation.home.presenter.HomePresenter;
-import com.example.foodplanner.presentation.home.view.CategoryAdapter;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements HomeView {
+public class HomeFragment extends Fragment implements HomeView, CategoryAdapter.OnCategoryClickListener {
 
     private HomePresenter presenter;
 
@@ -68,8 +67,8 @@ public class HomeFragment extends Fragment implements HomeView {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewCategories.setLayoutManager(layoutManager);
 
-        // Initialize Adapter with empty list first
-        categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
+        // Initialize Adapter with empty list and click listener
+        categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>(), this);
         recyclerViewCategories.setAdapter(categoryAdapter);
 
         // 3. Set click listener on Meal of the Day card
@@ -84,7 +83,7 @@ public class HomeFragment extends Fragment implements HomeView {
 
         // 4. Initialize Presenter & Fetch Data
         presenter = new HomePresenter(this);
-        presenter.getHomeData(); // This fetches both Meal and Categories
+        presenter.getHomeData();
     }
 
     @Override
@@ -97,7 +96,6 @@ public class HomeFragment extends Fragment implements HomeView {
 
     @Override
     public void showCategories(List<Category> categories) {
-        // Update the adapter with the list from API
         categoryAdapter.setList(categories);
     }
 
@@ -108,11 +106,17 @@ public class HomeFragment extends Fragment implements HomeView {
 
     @Override
     public void showLoading() {
-        // You can add a ProgressBar here later if you want
     }
 
     @Override
     public void hideLoading() {
-        // Hide ProgressBar
+    }
+
+    @Override
+    public void onCategoryClick(Category category) {
+        Bundle bundle = new Bundle();
+        bundle.putString("categoryName", category.getName());
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_nav_home_to_categoryFragment, bundle);
     }
 }

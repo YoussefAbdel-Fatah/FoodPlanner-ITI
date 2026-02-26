@@ -6,26 +6,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
 import com.example.foodplanner.model.Meal;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
     private Context context;
     private List<Meal> meals;
+    private OnSearchItemClickListener listener;
+    private Set<String> favoriteIds = new HashSet<>();
 
-    public SearchAdapter(Context context) {
+    public interface OnSearchItemClickListener {
+        void onItemClick(Meal meal);
+
+        void onFavoriteClick(Meal meal, boolean isCurrentlyFavorite);
+    }
+
+    public SearchAdapter(Context context, OnSearchItemClickListener listener) {
         this.context = context;
         this.meals = new ArrayList<>();
+        this.listener = listener;
     }
 
     public void setList(List<Meal> meals) {
         this.meals = meals;
+        notifyDataSetChanged();
+    }
+
+    public void setFavoriteIds(Set<String> ids) {
+        this.favoriteIds = ids;
         notifyDataSetChanged();
     }
 
@@ -42,16 +61,47 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         Meal meal = meals.get(position);
         holder.tvTitle.setText(meal.getName());
 
-        // We will mock the rating/calories for now since the API doesn't give them
-        holder.tvRating.setText("4.5 (99)");
-        holder.tvCalories.setText("350 kcal");
-        holder.tvTime.setText("30 min");
+        // Show area and category from API
+        if (meal.getArea() != null && !meal.getArea().isEmpty()) {
+            holder.tvArea.setText(meal.getArea());
+            holder.tvArea.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvArea.setVisibility(View.GONE);
+        }
+
+        if (meal.getCategory() != null && !meal.getCategory().isEmpty()) {
+            holder.tvCategory.setText(meal.getCategory());
+            holder.tvCategory.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvCategory.setVisibility(View.GONE);
+        }
 
         Glide.with(context)
                 .load(meal.getImageUrl())
                 .centerCrop()
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imgRecipe);
+
+        // Favorite state
+        boolean isFav = favoriteIds.contains(meal.getId());
+        updateFavoriteIcon(holder.btnFavorite, isFav);
+
+        holder.btnFavorite.setOnClickListener(v -> {
+            boolean currentFav = favoriteIds.contains(meal.getId());
+            listener.onFavoriteClick(meal, currentFav);
+        });
+
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(meal));
+    }
+
+    private void updateFavoriteIcon(ImageView btn, boolean isFav) {
+        if (isFav) {
+            btn.setImageResource(R.drawable.ic_heart_filled);
+            btn.setColorFilter(btn.getContext().getResources().getColor(R.color.chip_red_text, null));
+        } else {
+            btn.setImageResource(R.drawable.ic_heart_filled);
+            btn.setColorFilter(btn.getContext().getResources().getColor(R.color.text_grey, null));
+        }
     }
 
     @Override
@@ -60,16 +110,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     class SearchViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgRecipe;
-        TextView tvTitle, tvRating, tvCalories, tvTime;
+        ImageView imgRecipe, btnFavorite;
+        TextView tvTitle, tvArea, tvCategory;
 
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             imgRecipe = itemView.findViewById(R.id.imgRecipe);
             tvTitle = itemView.findViewById(R.id.tvRecipeTitle);
-            tvRating = itemView.findViewById(R.id.tvRating);
-            tvCalories = itemView.findViewById(R.id.tvCalories);
-            tvTime = itemView.findViewById(R.id.tvTime);
+            tvArea = itemView.findViewById(R.id.tvArea);
+            tvCategory = itemView.findViewById(R.id.tvCategory);
+            btnFavorite = itemView.findViewById(R.id.btnFavorite);
         }
     }
 }

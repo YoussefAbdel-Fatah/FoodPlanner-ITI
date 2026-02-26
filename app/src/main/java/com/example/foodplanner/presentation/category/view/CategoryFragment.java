@@ -1,12 +1,11 @@
-package com.example.foodplanner.presentation.search.view;
+package com.example.foodplanner.presentation.category.view;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,9 @@ import com.example.foodplanner.data.db.AppDatabase;
 import com.example.foodplanner.data.db.MealDAO;
 import com.example.foodplanner.data.db.MealEntity;
 import com.example.foodplanner.model.Meal;
-import com.example.foodplanner.presentation.search.presenter.SearchPresenter;
+import com.example.foodplanner.presentation.category.presenter.CategoryPresenterImp;
+import com.example.foodplanner.presentation.category.presenter.CategoryPresenterInterface;
+import com.example.foodplanner.presentation.search.view.SearchAdapter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,23 +32,24 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SearchFragment extends Fragment implements SearchViewInterface, SearchAdapter.OnSearchItemClickListener {
+public class CategoryFragment extends Fragment
+        implements CategoryViewInterface, SearchAdapter.OnSearchItemClickListener {
 
-    private SearchPresenter presenter;
-    private RecyclerView recyclerView;
+    private CategoryPresenterInterface presenter;
+    private RecyclerView rvCategoryMeals;
     private SearchAdapter adapter;
-    private EditText etSearch;
+    private TextView tvCategoryTitle;
+    private ImageView btnBack;
     private MealDAO mealDAO;
     private CompositeDisposable disposables = new CompositeDisposable();
 
-    public SearchFragment() {
-        // Required empty public constructor
+    public CategoryFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_category, container, false);
     }
 
     @Override
@@ -56,32 +58,28 @@ public class SearchFragment extends Fragment implements SearchViewInterface, Sea
 
         mealDAO = AppDatabase.getInstance(requireContext()).mealDAO();
 
-        etSearch = view.findViewById(R.id.etSearch);
-        recyclerView = view.findViewById(R.id.rvSearchResults);
+        tvCategoryTitle = view.findViewById(R.id.tvCategoryTitle);
+        btnBack = view.findViewById(R.id.btnBack);
+        rvCategoryMeals = view.findViewById(R.id.rvCategoryMeals);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        rvCategoryMeals.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter = new SearchAdapter(getContext(), this);
-        recyclerView.setAdapter(adapter);
+        rvCategoryMeals.setAdapter(adapter);
 
-        presenter = new SearchPresenter(this);
+        btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
 
-        // Observe favorite IDs to keep the heart icons in sync
+        // Observe favorites to keep heart icons in sync
         loadFavoriteIds();
 
-        etSearch.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                    actionId == EditorInfo.IME_ACTION_DONE ||
-                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                            && event.getAction() == KeyEvent.ACTION_DOWN)) {
-
-                String query = etSearch.getText().toString();
-                if (!query.isEmpty()) {
-                    presenter.searchMeals(query);
-                }
-                return true;
+        // Get category name from arguments
+        if (getArguments() != null) {
+            String categoryName = getArguments().getString("categoryName");
+            if (categoryName != null) {
+                tvCategoryTitle.setText(categoryName);
+                presenter = new CategoryPresenterImp(this);
+                presenter.getMealsByCategory(categoryName);
             }
-            return false;
-        });
+        }
     }
 
     private void loadFavoriteIds() {
@@ -121,7 +119,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface, Sea
         Bundle bundle = new Bundle();
         bundle.putString("mealId", meal.getId());
         Navigation.findNavController(requireView())
-                .navigate(R.id.action_nav_search_to_mealDetailsFragment, bundle);
+                .navigate(R.id.action_categoryFragment_to_mealDetailsFragment, bundle);
     }
 
     @Override
@@ -141,8 +139,6 @@ public class SearchFragment extends Fragment implements SearchViewInterface, Sea
             MealEntity entity = new MealEntity(meal.getId(), meal.getName(), meal.getImageUrl());
             entity.strArea = meal.getArea();
             entity.strCategory = meal.getCategory();
-            entity.strInstructions = meal.getInstructions();
-            entity.strYoutube = meal.getYoutubeUrl();
             disposables.add(
                     mealDAO.insertMeal(entity)
                             .subscribeOn(Schedulers.io())

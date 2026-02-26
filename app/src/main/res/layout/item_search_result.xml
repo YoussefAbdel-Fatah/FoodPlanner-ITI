@@ -30,36 +30,13 @@
             android:layout_height="28dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_search_bar"
+            android:background="@drawable/bg_instruction_number"
+            android:backgroundTint="@color/white"
             android:padding="6dp"
-            android:src="@drawable/ic_favorite"
+            android:src="@drawable/ic_heart_filled"
             app:tint="@color/text_grey"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-
-        <ImageView
-            android:id="@+id/iconStar"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:src="@drawable/ic_star"
-            app:tint="@color/rating_gold"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imgRecipe"/>
-
-        <TextView
-            android:id="@+id/tvRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4.8"
-            android:textColor="@color/text_dark"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toEndOf="@id/iconStar"
-            app:layout_constraintTop_toTopOf="@id/iconStar"
-            app:layout_constraintBottom_toBottomOf="@id/iconStar"/>
 
         <TextView
             android:id="@+id/tvRecipeTitle"
@@ -71,56 +48,44 @@
             android:textColor="@color/text_dark"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="@id/iconStar"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iconStar"/>
+            app:layout_constraintTop_toBottomOf="@id/imgRecipe"/>
 
-        <ImageView
-            android:id="@+id/iconTime"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:src="@drawable/ic_time"
-            app:tint="@color/text_grey"
+        <!-- Area chip -->
+        <TextView
+            android:id="@+id/tvArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Area"
+            android:textSize="11sp"
+            android:textColor="@color/chip_red_text"
+            android:background="@drawable/bg_chip_area"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
-            app:layout_constraintStart_toStartOf="@id/tvRecipeTitle"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvRecipeTitle"/>
 
+        <!-- Category chip -->
         <TextView
-            android:id="@+id/tvTime"
+            android:id="@+id/tvCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15m"
-            android:textColor="@color/text_grey"
+            android:text="Category"
             android:textSize="11sp"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toEndOf="@id/iconTime"
-            app:layout_constraintTop_toTopOf="@id/iconTime"
-            app:layout_constraintBottom_toBottomOf="@id/iconTime"/>
-
-        <ImageView
-            android:id="@+id/iconCal"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:src="@drawable/ic_calories"
-            app:tint="@color/text_grey"
-            android:layout_marginStart="12dp"
-            app:layout_constraintStart_toEndOf="@id/tvTime"
-            app:layout_constraintTop_toTopOf="@id/iconTime"
-            app:layout_constraintBottom_toBottomOf="@id/iconTime"/>
-
-        <TextView
-            android:id="@+id/tvCalories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="350 kcal"
-            android:textColor="@color/text_grey"
-            android:textSize="11sp"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toEndOf="@id/iconCal"
-            app:layout_constraintTop_toTopOf="@id/iconCal"
-            app:layout_constraintBottom_toBottomOf="@id/iconCal"/>
+            android:textColor="@color/chip_green_text"
+            android:background="@drawable/bg_chip_category"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:layout_marginStart="6dp"
+            app:layout_constraintStart_toEndOf="@id/tvArea"
+            app:layout_constraintTop_toTopOf="@id/tvArea"
+            app:layout_constraintBottom_toBottomOf="@id/tvArea"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

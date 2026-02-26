@@ -55,4 +55,9 @@ public class MealClient {
         return mealService.getMealById(id)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Single<MealResponse> filterByCategory(String category) {
+        return mealService.filterByCategory(category)
+                .subscribeOn(Schedulers.io());
+    }
 }
