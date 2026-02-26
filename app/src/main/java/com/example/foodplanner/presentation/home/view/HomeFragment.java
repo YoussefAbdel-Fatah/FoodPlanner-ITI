@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.example.foodplanner.model.Category;
 import com.example.foodplanner.model.Meal;
 import com.example.foodplanner.presentation.home.presenter.HomePresenter;
 import com.example.foodplanner.presentation.home.view.CategoryAdapter;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +33,14 @@ public class HomeFragment extends Fragment implements HomeView {
     // UI Elements
     private ImageView imgMeal;
     private TextView tvMealName, tvMealArea;
+    private MaterialCardView cardMealOfDay;
 
     // RecyclerView Elements
     private RecyclerView recyclerViewCategories;
     private CategoryAdapter categoryAdapter;
+
+    // Store the current random meal for navigation
+    private Meal currentMeal;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -42,7 +48,7 @@ public class HomeFragment extends Fragment implements HomeView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -54,6 +60,7 @@ public class HomeFragment extends Fragment implements HomeView {
         imgMeal = view.findViewById(R.id.imgMeal);
         tvMealName = view.findViewById(R.id.tvMealName);
         tvMealArea = view.findViewById(R.id.tvMealArea);
+        cardMealOfDay = view.findViewById(R.id.cardMealOfDay);
         recyclerViewCategories = view.findViewById(R.id.recyclerViewCategories);
 
         // 2. Setup RecyclerView (Horizontal)
@@ -65,13 +72,24 @@ public class HomeFragment extends Fragment implements HomeView {
         categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
         recyclerViewCategories.setAdapter(categoryAdapter);
 
-        // 3. Initialize Presenter & Fetch Data
+        // 3. Set click listener on Meal of the Day card
+        cardMealOfDay.setOnClickListener(v -> {
+            if (currentMeal != null && currentMeal.getId() != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("mealId", currentMeal.getId());
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_nav_home_to_mealDetailsFragment, bundle);
+            }
+        });
+
+        // 4. Initialize Presenter & Fetch Data
         presenter = new HomePresenter(this);
         presenter.getHomeData(); // This fetches both Meal and Categories
     }
 
     @Override
     public void showRandomMeal(Meal meal) {
+        this.currentMeal = meal;
         tvMealName.setText(meal.getName());
         tvMealArea.setText(meal.getArea());
         Glide.with(this).load(meal.getImageUrl()).into(imgMeal);

@@ -10,8 +10,13 @@ public interface MealService {
     // This tells Retrofit: "Go to /random.php and give me a Single response"
     @GET("random.php")
     Single<MealResponse> getRandomMeal();
+
     @GET("categories.php")
     Single<CategoryResponse> getCategories();
+
     @GET("search.php")
     Single<MealResponse> searchMeals(@Query("s") String query);
+
+    @GET("lookup.php")
+    Single<MealResponse> getMealById(@Query("i") String id);
 }
