@@ -79,4 +79,7 @@ dependencies {
 
     implementation("com.google.android.material:material:1.9.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    // YouTube Player (Embedded in-app player)
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
 }

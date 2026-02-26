@@ -12,9 +12,9 @@ public class MealEntity {
     public String strMeal;
     public String strMealThumb;
     public String strArea;
+    public String strCategory;
     public String strInstructions;
     public String strYoutube;
-    // You can add more fields if you want to store ingredients offline
 
     public MealEntity(@NonNull String idMeal, String strMeal, String strMealThumb) {
         this.idMeal = idMeal;

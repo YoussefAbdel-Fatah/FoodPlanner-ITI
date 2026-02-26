@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,14 +18,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
+import com.example.foodplanner.data.db.AppDatabase;
+import com.example.foodplanner.data.db.MealDAO;
+import com.example.foodplanner.data.db.MealEntity;
 import com.example.foodplanner.model.Ingredient;
 import com.example.foodplanner.model.Meal;
 import com.example.foodplanner.presentation.details.presenter.MealDetailsPresenter;
 import com.example.foodplanner.presentation.details.presenter.MealDetailsPresenterImpl;
-import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
@@ -41,12 +48,16 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     private RecyclerView rvIngredients;
     private LinearLayout layoutInstructions;
     private TextView tvVideoHeader;
-    private MaterialCardView cardVideoPlayer;
-    private WebView webViewVideo;
+    private YouTubePlayerView youtubePlayerView;
+    private FloatingActionButton fabFavorite;
 
     private IngredientsAdapter ingredientsAdapter;
 
     private Meal currentMeal;
+    private boolean isFavorite = false;
+
+    private MealDAO mealDAO;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     public MealDetailsFragment() {
         // Required empty public constructor
@@ -62,6 +73,9 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize Room DAO
+        mealDAO = AppDatabase.getInstance(requireContext()).mealDAO();
+
         // Initialize UI
         imgMealDetail = view.findViewById(R.id.imgMealDetail);
         btnBack = view.findViewById(R.id.btnBack);
@@ -72,8 +86,11 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         rvIngredients = view.findViewById(R.id.rvIngredients);
         layoutInstructions = view.findViewById(R.id.layoutInstructions);
         tvVideoHeader = view.findViewById(R.id.tvVideoHeader);
-        cardVideoPlayer = view.findViewById(R.id.cardVideoPlayer);
-        webViewVideo = view.findViewById(R.id.webViewVideo);
+        youtubePlayerView = view.findViewById(R.id.youtubePlayerView);
+        fabFavorite = view.findViewById(R.id.fabFavorite);
+
+        // Register lifecycle observer
+        getLifecycle().addObserver(youtubePlayerView);
 
         // Setup RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
@@ -84,6 +101,17 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
         // Back button
         btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+
+        // FAB click — toggle favorite
+        fabFavorite.setOnClickListener(v -> {
+            if (currentMeal == null)
+                return;
+            if (isFavorite) {
+                removeFromFavorites();
+            } else {
+                addToFavorites();
+            }
+        });
 
         // Get meal ID from arguments
         if (getArguments() != null) {
@@ -119,6 +147,70 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
         // Video
         setupVideo(meal.getYoutubeUrl());
+
+        // Check if already favorite
+        checkIfFavorite(meal.getId());
+    }
+
+    private void checkIfFavorite(String mealId) {
+        disposables.add(
+                mealDAO.isFavorite(mealId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(favorite -> {
+                            isFavorite = favorite;
+                            updateFabIcon();
+                        }));
+    }
+
+    private void addToFavorites() {
+        if (currentMeal == null)
+            return;
+        MealEntity entity = new MealEntity(currentMeal.getId(), currentMeal.getName(), currentMeal.getImageUrl());
+        entity.strArea = currentMeal.getArea();
+        entity.strCategory = currentMeal.getCategory();
+        entity.strInstructions = currentMeal.getInstructions();
+        entity.strYoutube = currentMeal.getYoutubeUrl();
+
+        disposables.add(
+                mealDAO.insertMeal(entity)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            isFavorite = true;
+                            updateFabIcon();
+                            Toast.makeText(getContext(), "Added to Favorites", Toast.LENGTH_SHORT).show();
+                        }, error -> Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT)
+                                .show()));
+    }
+
+    private void removeFromFavorites() {
+        if (currentMeal == null)
+            return;
+        MealEntity entity = new MealEntity(currentMeal.getId(), currentMeal.getName(), currentMeal.getImageUrl());
+
+        disposables.add(
+                mealDAO.deleteMeal(entity)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            isFavorite = false;
+                            updateFabIcon();
+                            Toast.makeText(getContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show();
+                        }, error -> Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT)
+                                .show()));
+    }
+
+    private void updateFabIcon() {
+        if (isFavorite) {
+            fabFavorite.setImageResource(R.drawable.ic_heart_filled);
+            fabFavorite.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    getResources().getColor(R.color.chip_red_text, null)));
+        } else {
+            fabFavorite.setImageResource(R.drawable.ic_heart_filled);
+            fabFavorite.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                    getResources().getColor(R.color.primary_green, null)));
+        }
     }
 
     private void setupInstructions(String instructions) {
@@ -154,22 +246,14 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
             String videoId = extractYoutubeVideoId(youtubeUrl);
             if (videoId != null) {
                 tvVideoHeader.setVisibility(View.VISIBLE);
-                cardVideoPlayer.setVisibility(View.VISIBLE);
+                youtubePlayerView.setVisibility(View.VISIBLE);
 
-                WebSettings webSettings = webViewVideo.getSettings();
-                webSettings.setJavaScriptEnabled(true);
-                webSettings.setMediaPlaybackRequiresUserGesture(false);
-                webViewVideo.setWebChromeClient(new WebChromeClient());
-
-                String embedHtml = "<html><body style=\"margin:0;padding:0;background:#000;\">"
-                        + "<iframe width=\"100%\" height=\"100%\" "
-                        + "src=\"https://www.youtube.com/embed/" + videoId + "\" "
-                        + "frameborder=\"0\" "
-                        + "allowfullscreen "
-                        + "allow=\"autoplay; encrypted-media\"></iframe>"
-                        + "</body></html>";
-
-                webViewVideo.loadData(embedHtml, "text/html", "utf-8");
+                youtubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                    @Override
+                    public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                        youTubePlayer.cueVideo(videoId, 0);
+                    }
+                });
             }
         }
     }
@@ -204,19 +288,15 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void showLoading() {
-        // Could add a ProgressBar later
     }
 
     @Override
     public void hideLoading() {
-        // Hide ProgressBar
     }
 
     @Override
     public void onDestroyView() {
-        if (webViewVideo != null) {
-            webViewVideo.destroy();
-        }
+        disposables.clear();
         super.onDestroyView();
     }
 }

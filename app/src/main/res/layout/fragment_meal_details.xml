@@ -213,24 +213,14 @@
                 android:visibility="gone" />
 
             <!-- Video Player -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardVideoPlayer"
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/youtubePlayerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="24dp"
-                android:visibility="gone"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-
-                <WebView
-                    android:id="@+id/webViewVideo"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp" />
-
-            </com.google.android.material.card.MaterialCardView>
+                android:visibility="gone" />
 
         </LinearLayout>
 
