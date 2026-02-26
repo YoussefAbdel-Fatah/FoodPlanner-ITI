@@ -10,14 +10,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    android:paddingBottom="80dp"> <ImageView
-    android:id="@+id/imgMenu"
-    android:layout_width="24dp"
-    android:layout_height="24dp"
-    android:src="@drawable/ic_menu"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:tint="@color/text_dark" />
+    android:paddingBottom="80dp">
+
 
     <TextView
         android:id="@+id/tvAppTitle"

@@ -11,25 +11,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.data.db.AppDatabase;
 import com.example.foodplanner.data.db.MealDAO;
 import com.example.foodplanner.data.db.MealEntity;
+import com.example.foodplanner.model.Meal;
+import com.example.foodplanner.presentation.search.view.SearchAdapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavoriteClickListener {
+public class FavoriteFragment extends Fragment implements SearchAdapter.OnSearchItemClickListener {
 
     private RecyclerView rvFavorites;
     private TextView tvEmpty;
-    private FavoriteAdapter adapter;
+    private SearchAdapter adapter;
     private MealDAO mealDAO;
     private CompositeDisposable disposables = new CompositeDisposable();
 
@@ -51,8 +56,8 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         rvFavorites = view.findViewById(R.id.rvFavorites);
         tvEmpty = view.findViewById(R.id.tvEmptyFavorites);
 
-        adapter = new FavoriteAdapter(getContext(), new ArrayList<>(), this);
-        rvFavorites.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new SearchAdapter(getContext(), this);
+        rvFavorites.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rvFavorites.setAdapter(adapter);
 
         loadFavorites();
@@ -63,7 +68,20 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
                 mealDAO.getAllMeals()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(meals -> {
+                        .subscribe(mealEntities -> {
+                            List<Meal> meals = new ArrayList<>();
+                            Set<String> favIds = new HashSet<>();
+                            for (MealEntity entity : mealEntities) {
+                                Meal meal = new Meal();
+                                meal.setId(entity.idMeal);
+                                meal.setName(entity.strMeal);
+                                meal.setImageUrl(entity.strMealThumb);
+                                meal.setArea(entity.strArea);
+                                meal.setCategory(entity.strCategory);
+                                meals.add(meal);
+                                favIds.add(entity.idMeal);
+                            }
+                            adapter.setFavoriteIds(favIds);
                             adapter.setList(meals);
                             tvEmpty.setVisibility(meals.isEmpty() ? View.VISIBLE : View.GONE);
                             rvFavorites.setVisibility(meals.isEmpty() ? View.GONE : View.VISIBLE);
@@ -71,22 +89,39 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
     }
 
     @Override
-    public void onRemoveClick(MealEntity meal) {
-        disposables.add(
-                mealDAO.deleteMeal(meal)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                () -> Toast.makeText(getContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show(),
-                                error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show()));
+    public void onItemClick(Meal meal) {
+        Bundle bundle = new Bundle();
+        bundle.putString("mealId", meal.getId());
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_nav_favorite_to_mealDetailsFragment, bundle);
     }
 
     @Override
-    public void onItemClick(MealEntity meal) {
-        Bundle bundle = new Bundle();
-        bundle.putString("mealId", meal.idMeal);
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_nav_favorite_to_mealDetailsFragment, bundle);
+    public void onFavoriteClick(Meal meal, boolean isCurrentlyFavorite) {
+        if (isCurrentlyFavorite) {
+            MealEntity entity = new MealEntity(meal.getId(), meal.getName(), meal.getImageUrl());
+            disposables.add(
+                    mealDAO.deleteMeal(entity)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    () -> Toast.makeText(getContext(), "Removed from Favorites", Toast.LENGTH_SHORT)
+                                            .show(),
+                                    error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT)
+                                            .show()));
+        } else {
+            MealEntity entity = new MealEntity(meal.getId(), meal.getName(), meal.getImageUrl());
+            entity.strArea = meal.getArea();
+            entity.strCategory = meal.getCategory();
+            disposables.add(
+                    mealDAO.insertMeal(entity)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    () -> Toast.makeText(getContext(), "Added to Favorites", Toast.LENGTH_SHORT).show(),
+                                    error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT)
+                                            .show()));
+        }
     }
 
     @Override

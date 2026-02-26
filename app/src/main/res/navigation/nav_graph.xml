@@ -92,7 +92,15 @@
         android:id="@+id/nav_profile"
         android:name="com.example.foodplanner.presentation.profile.view.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_nav_profile_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/mealDetailsFragment"
