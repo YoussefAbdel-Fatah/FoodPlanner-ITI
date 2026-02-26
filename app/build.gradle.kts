@@ -58,17 +58,13 @@ dependencies {
     implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
     implementation("io.reactivex.rxjava3:rxjava:3.1.5")
-//
-//    // Room (Local Database)
-//    val roomVersion = "2.6.1"
-//    implementation("androidx.room:room-runtime:$roomVersion")
-//    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-//    // Essential for your project: Room support for RxJava 3
-//    implementation("androidx.room:room-rxjava3:$roomVersion")
-//
-//    // Glide (Loading Images from URL)
-//    implementation("com.github.bumptech.glide:glide:4.16.0")
-//    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // Room (Local Database)
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    // Essential for your project: Room support for RxJava 3
+    implementation("androidx.room:room-rxjava3:$roomVersion")
 
     // Lottie (For your Splash Screen Animation)
     implementation("com.airbnb.android:lottie:6.3.0")
@@ -80,4 +76,7 @@ dependencies {
 
     // Firebase (Authentication)
     implementation("com.google.firebase:firebase-auth")
+
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }

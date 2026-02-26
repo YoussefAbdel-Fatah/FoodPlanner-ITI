@@ -1,15 +1,12 @@
 package com.example.foodplanner.presentation.search.view;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,14 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodplanner.R;
 import com.example.foodplanner.model.Meal;
 import com.example.foodplanner.presentation.search.presenter.SearchPresenter;
-import com.example.foodplanner.presentation.search.view.SearchAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 
 public class SearchFragment extends Fragment implements SearchViewInterface {
 
@@ -51,19 +42,15 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Initialize UI
         etSearch = view.findViewById(R.id.etSearch);
         recyclerView = view.findViewById(R.id.rvSearchResults);
 
-        // 2. Setup RecyclerView
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter = new SearchAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
-        // 3. Initialize Presenter
         presenter = new SearchPresenter(this);
 
-        // 4. Setup Search Listener (When user presses ENTER on keyboard)
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     actionId == EditorInfo.IME_ACTION_DONE ||
@@ -77,9 +64,6 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
             }
             return false;
         });
-
-        // Optional: Trigger a default search so the screen isn't empty
-        // presenter.searchMeals("Chicken");
     }
 
     @Override
