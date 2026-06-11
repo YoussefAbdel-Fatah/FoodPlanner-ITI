@@ -33,10 +33,6 @@ This application demonstrates a practical implementation of modern Android archi
 
 *(Add your screenshots here! Replace the placeholder links with actual paths to your images)*
 
-| Home & Categories | Meal Details | User Favorites |
-| :---: | :---: | :---: |
-| <img src="link_to_image_1.png" width="200"/> | <img src="link_to_image_2.png" width="200"/> | <img src="link_to_image_3.png" width="200"/> |
-
 ## 🚀 Try it Out
 
 Want to test the app on your own device? You can download the compiled APK directly here:
